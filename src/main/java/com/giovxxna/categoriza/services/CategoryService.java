@@ -28,6 +28,15 @@ public class CategoryService {
 
     public Category update(String id, CategoryDTO categoryData){
         Category category = this.repository.findById(id).orElseThrow(CategoryNotFoundException::new);
-        return newCategory;
+
+        if(!categoryData.title().isEmpty()) category.setTitle(categoryData.title());
+        if(!categoryData.description().isEmpty()) category.setDescription(categoryData.description());
+        this.repository.save(category);
+        return category;
+    }
+
+    public void delete(String id){
+        Category category = this.repository.findById(id).orElseThrow(CategoryNotFoundException::new);
+        this.repository.delete(category);
     }
 }
