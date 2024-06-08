@@ -1,4 +1,4 @@
-package com.giovxxna.categoriza.domain.products;
+package com.giovxxna.categoriza.domain.product;
 
 import com.giovxxna.categoriza.domain.category.Category;
 import lombok.Getter;

@@ -2,10 +2,10 @@ package com.giovxxna.categoriza.services;
 
 import com.giovxxna.categoriza.domain.category.Category;
 import com.giovxxna.categoriza.domain.category.CategoryDTO;
+import com.giovxxna.categoriza.domain.product.exceptions.ProductNotFoundException;
 import com.giovxxna.categoriza.domain.category.exceptions.CategoryNotFoundException;
-import com.giovxxna.categoriza.domain.products.Product;
-import com.giovxxna.categoriza.domain.products.ProductDTO;
-import com.giovxxna.categoriza.repositories.CategoryRepository;
+import com.giovxxna.categoriza.domain.product.Product;
+import com.giovxxna.categoriza.domain.product.ProductDTO;
 import com.giovxxna.categoriza.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -33,17 +33,20 @@ public class ProductService {
         return this.repository.findAll();
     }
 
-    public Product update(String id, CategoryDTO categoryData){
-        Product product = this.repository.findById(id).orElseThrow(CategoryNotFoundException::new);
+    public Product update(String id, ProductDTO productData){
+        Product product = this.repository.findById(id).orElseThrow(ProductNotFoundException::new);
+        this.categoryService.getById(productData.categoryId()).ifPresent(product::setCategory);
 
-        if(!categoryData.title().isEmpty()) category.setTitle(categoryData.title());
-        if(!categoryData.description().isEmpty()) category.setDescription(categoryData.description());
-        this.repository.save(category);
-        return category;
+        if(!productData.title().isEmpty()) product.setTitle(productData.title());
+        if(!productData.description().isEmpty()) product.setDescription(productData.description());
+        if(!(productData.price() == null)) product.setPrice(productData.price());
+
+        this.repository.save(product);
+        return product;
     }
 
     public void delete(String id){
-        Category category = this.repository.findById(id).orElseThrow(CategoryNotFoundException::new);
-        this.repository.delete(category);
+        Product product = this.repository.findById(id).orElseThrow(ProductNotFoundException::new);
+        this.repository.delete(product);
     }
 }
